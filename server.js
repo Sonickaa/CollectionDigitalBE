@@ -6,10 +6,18 @@ const cors = require("cors");
 require("dotenv").config();
 require("colors");
 const connectDB = require("./dbinit");
+
+const userRoutes = require("./routes/user");
+
 connectDB();
 
 app.use(express.json());
 app.use(cors());
+
+app.use((req, res, next) => {
+  console.log(req.path, req.method);
+  next();
+});
 
 const API =
   "https://api.vam.ac.uk/v2/objects/search?q=worth%20wedding%20dress&page=1&page_size=15&year_made_from=1870&year_made_to=1900&id_category=THES49044";
@@ -30,6 +38,8 @@ app.get("/objects", async (req, res) => {
       .json({ error: "An error occurred while fetching data from the API" });
   }
 });
+
+app.use("/user", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`App listening on port http://localhost:${PORT}`.rainbow);
