@@ -6,13 +6,13 @@ const cors = require("cors");
 require("dotenv").config();
 require("colors");
 const connectDB = require("./dbinit");
+connectDB();
 
 app.use(express.json());
 app.use(cors());
 
-connectDB();
-
-const API = "https://api.vam.ac.uk/openapi.json";
+const API =
+  "https://api.vam.ac.uk/v2/objects/search?q=worth%20wedding%20dress&page=1&page_size=15&year_made_from=1870&year_made_to=1900&id_category=THES49044";
 
 app.get("/", (req, res) => {
   res.send("Welcome to digital collective");
