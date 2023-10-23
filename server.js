@@ -7,14 +7,23 @@ require("dotenv").config();
 require("colors");
 const connectDB = require("./dbinit");
 
-app.use(express.json());
-app.use(cors());
+const userRoutes = require("./routes/user");
 
 connectDB();
 
-app.get("/", (req, res) => {
-  res.send("Welcome to digital collective");
+app.use(express.json());
+app.use(cors());
+
+app.use((req, res, next) => {
+  console.log(req.path, req.method);
+  next();
 });
+
+app.get("/", (req, res) => {
+  res.send("Welcome to Collection Digital");
+});
+
+app.use("/user", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`App listening on port http://localhost:${PORT}`.rainbow);
