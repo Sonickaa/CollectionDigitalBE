@@ -13,21 +13,21 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   // username is nice to have
-  /*   username: {
+  username: {
     type: String,
     required: true,
-  }, */
+  },
 });
 
 // custom signip static method
-userSchema.statics.signup = async function (email, password /* , username */) {
+userSchema.statics.signup = async function (email, password, username) {
   const exists = await this.findOne({ email });
 
   if (exists) {
     throw Error("email already in use");
   }
 
-  if (!email || !password /*  || !username */) {
+  if (!email || !password || !username) {
     throw Error("all fields bitte filled");
   }
   if (!validator.isEmail(email)) {
@@ -41,7 +41,7 @@ userSchema.statics.signup = async function (email, password /* , username */) {
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
 
-  const user = await this.create({ /*  username,  */ email, password: hash });
+  const user = await this.create({ username, email, password: hash });
 
   return user;
 };
