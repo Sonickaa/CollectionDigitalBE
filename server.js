@@ -7,29 +7,23 @@ require("dotenv").config();
 require("colors");
 const connectDB = require("./dbinit");
 
-app.use(express.json());
-app.use(cors());
+const userRoutes = require("./routes/user");
 
 connectDB();
 
-/* const API = "https://api.vam.ac.uk/v2"; */
+app.use(express.json());
+app.use(cors());
 
-app.get("/", (req, res) => {
-  res.send("Welcome to digital collective");
+app.use((req, res, next) => {
+  console.log(req.path, req.method);
+  next();
 });
 
-/* app.get("/objects", async (req, res) => {
-  try {
-    const response = await axios.get(API);
-    const data = response.data;
-    res.json(data);
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching data from the API" });
-  }
-}); */
+app.get("/", (req, res) => {
+  res.send("Welcome to Collection Digital");
+});
+
+app.use("/user", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`App listening on port http://localhost:${PORT}`.rainbow);
