@@ -10,7 +10,7 @@ const requireAuth = async (req, res, next) => {
   }
 
   // the auth in the headers is structured as follows: 'Bearer ddsades123ew21.dsaadwe23.d23d32' and we only need the second part, the token itself
-  const token = authorization.split(" ")[1];
+  const token = authorization?.split(" ")[1];
 
   // Verify the token and make sure it hasn't been tampered with
 
