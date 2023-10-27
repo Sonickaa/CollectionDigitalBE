@@ -2,7 +2,7 @@ const User = require("../schemas/User");
 const jwt = require("jsonwebtoken");
 
 const createToken = (_id, name) => {
-  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "1d" }, { name });
+  return jwt.sign({ _id, name }, process.env.SECRET, { expiresIn: "1d" });
 };
 
 //login the user
