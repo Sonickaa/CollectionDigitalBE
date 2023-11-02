@@ -8,6 +8,7 @@ require("colors");
 const connectDB = require("./dbinit");
 
 const userRoutes = require("./routes/user");
+const imagesRoutes = require("./routes/imagesRoutes")
 
 connectDB();
 
@@ -24,6 +25,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRoutes);
+app.use("/api", imagesRoutes)
+
 
 app.listen(PORT, () => {
   console.log(`App listening on port http://localhost:${PORT}`.rainbow);
