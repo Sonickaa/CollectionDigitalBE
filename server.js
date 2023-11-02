@@ -29,8 +29,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRoutes);
-app.use("/Collection", item);
-app.use("/Collections", collection);
+app.use("/collection/item", item);
+app.use("/collection/name", collection);
 
 app.listen(PORT, () => {
   console.log(`App listening on port http://localhost:${PORT}`.rainbow);

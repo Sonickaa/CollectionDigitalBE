@@ -1,10 +1,12 @@
 const { collection } = require("../schemas/Collection");
 const Collection = require("../schemas/Collection");
+console.log("collection", collection);
 
 //get all
 const getAllCollections = async (req, res) => {
+  console.log("halloo");
   try {
-    const collections = await Collection.find();
+    const collections = await Collection.findById().populate("owner");
 
     if (!collections.length) {
       res.status(200).json({ msg: "No collections in the DB " });

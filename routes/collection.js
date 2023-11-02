@@ -8,12 +8,13 @@ const {
   deleteOneCollection,
 } = require("../controllers/collection");
 
+const requireAuth = require("../middlewares/requireAuth");
 const api = express.Router();
-
+api.use(requireAuth);
 //executing controllers on the specific actions
-api.route("/name").get(getAllCollections).post(createCollection);
+api.route("/").get(getAllCollections).post(createCollection);
 api
-  .route("/name/:id")
+  .route("/:id")
   .get(getOneCollection)
   .put(UpdateCollection)
   .delete(deleteOneCollection);

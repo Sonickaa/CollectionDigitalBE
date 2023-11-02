@@ -11,7 +11,7 @@ const {
 const api = express.Router();
 
 //executing controllers on the specific actions
-api.route("/item").get(getAllItems).post(createItem);
-api.route("/item/:id").get(getOneItem).put(UpdateItem).delete(deleteOneItem);
+api.route("/").get(getAllItems).post(createItem);
+api.route("/:id").get(getOneItem).put(UpdateItem).delete(deleteOneItem);
 
 module.exports = api;
