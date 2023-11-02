@@ -11,6 +11,9 @@ const userRoutes = require("./routes/user");
 const item = require("./routes/item");
 const collection = require("./routes/collection");
 
+const imagesRoutes = require("./routes/imagesRoutes")
+
+
 connectDB();
 
 app.use(express.json());
@@ -29,8 +32,13 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRoutes);
+
 app.use("/collection/item", item);
 app.use("/collection/name", collection);
+
+app.use("/api", imagesRoutes)
+
+
 
 app.listen(PORT, () => {
   console.log(`App listening on port http://localhost:${PORT}`.rainbow);
