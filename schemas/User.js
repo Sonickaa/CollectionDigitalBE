@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // username is nice to have
+
   username: {
     type: String,
     required: true,
@@ -24,18 +24,18 @@ userSchema.statics.signup = async function (email, password, username) {
   const exists = await this.findOne({ email });
 
   if (exists) {
-    throw Error("email already in use");
+    throw Error("This email is already in use.");
   }
 
   if (!email || !password || !username) {
-    throw Error("all fields bitte filled");
+    throw Error("Please fill out all the fields.");
   }
   if (!validator.isEmail(email)) {
-    throw Error("email is not valid");
+    throw Error("This email is not valid.");
   }
   if (!validator.isStrongPassword(password)) {
     throw Error(
-      "make sure to use min 8 chars, symbol, number and upper case letter"
+      "Please use at least 8 characters, one symbol, one number and one upper case letter."
     );
   }
   const salt = await bcrypt.genSalt(10);
@@ -49,18 +49,18 @@ userSchema.statics.signup = async function (email, password, username) {
 //login
 userSchema.statics.login = async function (email, password) {
   if (!email || !password) {
-    throw Error("all fields must be filled");
+    throw Error("Please fill out all the fields.");
   }
   const user = await this.findOne({ email });
 
   if (!user) {
-    throw Error("incorrect email");
+    throw Error("Incorrect email, please try again or sign up first.");
   }
 
   const match = await bcrypt.compare(password, user.password);
 
   if (!match) {
-    throw Error("incorrect password");
+    throw Error("Incorrect password, please try again.");
   }
   return user;
 };
