@@ -6,7 +6,7 @@ console.log("collection", collection);
 const getAllCollections = async (req, res) => {
   console.log("halloo");
   try {
-    const collections = await Collection.findById().populate("owner");
+    const collections = await Collection.find().populate("owner");
 
     if (!collections.length) {
       res.status(200).json({ msg: "No collections in the DB " });
@@ -22,11 +22,13 @@ const getAllCollections = async (req, res) => {
 const getOneCollection = async (req, res) => {
   try {
     const { id } = req.params;
-    const item = await Collection.findById(id);
-    if (collection) {
-      return res.status(200).json(collection);
+    const collections = await Collection.findById(id);
+
+    if (!collections) {
+      res.status(200).json({ msg: "No collections in the DB " });
+    } else {
+      res.status(200).json({ collections });
     }
-    res.status(404).json({ msg: "I did not find this collection." });
   } catch (error) {
     res.status(500).json(error);
   }
