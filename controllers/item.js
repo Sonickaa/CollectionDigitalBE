@@ -1,9 +1,12 @@
+const Collection = require("../schemas/Collection");
 const Item = require("../schemas/Item");
 
 //get all
 const getAllItems = async (req, res) => {
+  const userId = req.user._id;
+
   try {
-    const items = await Item.find();
+    const items = await Item.find(userId);
 
     if (!items.length) {
       res.status(200).json({ msg: "No items in the DB " });
@@ -39,7 +42,18 @@ const createItem = async (req, res) => {
       artist_maker,
       origin,
     });
-    res.status(201).json(item);
+
+    const collectionID = req.body.collection_ID;
+
+    const updatedCollection = await Collection.findByIdAndUpdate(
+      collectionID,
+      {
+        $push: { items: item._id },
+      },
+      { new: true }
+    ).populate({ path: "items" });
+
+    res.status(201).json({ collection: updatedCollection });
   } catch (error) {
     res.status(500).json(error);
   }
