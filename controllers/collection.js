@@ -58,7 +58,9 @@ const createCollection = async (req, res) => {
       userID,
       { $push: { collections: collection._id } },
       { new: true }
-    ).populate({ path: "collections", populate: { path: "items" } });
+    )
+      .populate({ path: "collections", populate: { path: "items" } })
+      .select("-password");
 
     res.status(201).json({ user: updatedUser });
   } catch (error) {

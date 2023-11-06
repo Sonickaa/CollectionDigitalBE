@@ -11,7 +11,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    select: false,
   },
 
   username: {
@@ -50,7 +49,7 @@ userSchema.statics.signup = async function (email, password, username) {
 
   const user = await this.create({ username, email, password: hash });
 
-  await user.populate("collections").execPopulate();
+  /*   await user.populate("collections").execPopulate(); */
 
   return user;
 };
