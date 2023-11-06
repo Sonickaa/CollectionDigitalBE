@@ -1,17 +1,20 @@
-const { collection } = require("../schemas/Collection");
 const Collection = require("../schemas/Collection");
-console.log("collection", collection);
+const User = require("../schemas/User");
 
 //get all
 const getAllCollections = async (req, res) => {
-  console.log("halloo");
-  try {
-    const collections = await Collection.find().populate("owner");
+  const userId = req.user._id;
 
-    if (!collections.length) {
-      res.status(200).json({ msg: "No collections in the DB " });
+  try {
+    const user = await User.findById(userId).populate({
+      path: "collections",
+      populate: { path: "items" },
+    });
+
+    if (!user || !user.collections || user.collections.length === 0) {
+      res.status(200).json({ msg: "No collections for the user" });
     } else {
-      res.status(200).json({ collections });
+      res.status(200).json({ collections: user.collections });
     }
   } catch (error) {
     res.status(500).json(error);
@@ -22,7 +25,7 @@ const getAllCollections = async (req, res) => {
 const getOneCollection = async (req, res) => {
   try {
     const { id } = req.params;
-    const collections = await Collection.findById(id);
+    const collections = await Collection.findById(id).populate("items");
 
     if (!collections) {
       res.status(200).json({ msg: "No collections in the DB " });
@@ -37,13 +40,27 @@ const getOneCollection = async (req, res) => {
 //create new
 const createCollection = async (req, res) => {
   try {
-    const { name, description, owner } = req.body;
+    const { name, description } = req.body;
+
+    const cloudinaryUrl = req.body.cloudinaryUrl;
+
+    console.log("@@@@@@@@ CLOUDINARY URL", cloudinaryUrl);
+
     const collection = await Collection.create({
       name,
       description,
-      owner,
+      cloudinaryUrl,
     });
-    res.status(201).json(collection);
+
+    const userID = req.user._id;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userID,
+      { $push: { collections: collection._id } },
+      { new: true }
+    ).populate({ path: "collections", populate: { path: "items" } });
+
+    res.status(201).json({ user: updatedUser });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -52,21 +69,20 @@ const createCollection = async (req, res) => {
 //update collection
 const UpdateCollection = async (req, res) => {
   try {
-    const { name, description, owner } = req.body;
+    const { name, description } = req.body;
     const { id } = req.params;
     const collection = await Collection.findByIdAndUpdate(
       id,
       {
         name,
         description,
-        owner,
       },
       {
         new: true,
       }
     );
     if (!collection) {
-      res.status(404).json({ msg: "I don´t know this collection" });
+      res.status(404).json({ msg: "I don't know this collection" });
     } else {
       res
         .status(200)
@@ -83,7 +99,7 @@ const deleteOneCollection = async (req, res) => {
     const { id } = req.params;
     const collection = await Collection.findByIdAndDelete(id);
     if (!collection) {
-      res.status(404).json({ msg: "I don´t know this collection" });
+      res.status(404).json({ msg: "I don't know this collection" });
     } else {
       res
         .status(200)

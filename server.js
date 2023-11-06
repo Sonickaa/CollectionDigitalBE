@@ -21,19 +21,14 @@ app.use(cors());
 // middleware for the form submission
 app.use(express.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  console.log(req.path, req.method);
-  next();
-});
-
 app.get("/", (req, res) => {
   res.send("Welcome to Collection Digital");
 });
 
 app.use("/user", userRoutes);
 
-app.use("/collection/item", item);
-app.use("/collection/name", collection);
+app.use("/items", item);
+app.use("/collections", collection);
 
 app.use("/api", imagesRoutes);
 
