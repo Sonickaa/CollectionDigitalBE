@@ -8,22 +8,29 @@ require("colors");
 const connectDB = require("./dbinit");
 
 const userRoutes = require("./routes/user");
+const item = require("./routes/item");
+const collection = require("./routes/collection");
+
+const imagesRoutes = require("./routes/imagesRoutes");
 
 connectDB();
 
 app.use(express.json());
 app.use(cors());
 
-app.use((req, res, next) => {
-  console.log(req.path, req.method);
-  next();
-});
+// middleware for the form submission
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.send("Welcome to Collection Digital");
 });
 
 app.use("/user", userRoutes);
+
+app.use("/items", item);
+app.use("/collections", collection);
+
+app.use("/api", imagesRoutes);
 
 app.listen(PORT, () => {
   console.log(`App listening on port http://localhost:${PORT}`.rainbow);

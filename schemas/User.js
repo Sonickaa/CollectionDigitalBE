@@ -12,14 +12,20 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // username is nice to have
+
   username: {
     type: String,
     required: true,
   },
+  collections: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Collection",
+    },
+  ],
 });
 
-// custom signip static method
+// custom signup static method
 userSchema.statics.signup = async function (email, password, username) {
   const exists = await this.findOne({ email });
 
@@ -43,6 +49,8 @@ userSchema.statics.signup = async function (email, password, username) {
 
   const user = await this.create({ username, email, password: hash });
 
+  /*   await user.populate("collections").execPopulate(); */
+
   return user;
 };
 
@@ -51,7 +59,7 @@ userSchema.statics.login = async function (email, password) {
   if (!email || !password) {
     throw Error("Please fill out all the fields.");
   }
-  const user = await this.findOne({ email });
+  const user = await this.findOne({ email }).populate("collections");
 
   if (!user) {
     throw Error("Incorrect email, please try again or sign up first.");
