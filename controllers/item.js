@@ -3,7 +3,8 @@ const Item = require("../schemas/Item");
 
 //get all
 const getAllItems = async (req, res) => {
-  const userId = req.user._id;
+  const userId = req.user?._id;
+  console.log("req.user", req.user);
 
   try {
     const items = await Item.find(userId);
@@ -36,11 +37,15 @@ const getOneItem = async (req, res) => {
 const createItem = async (req, res) => {
   try {
     const { object_type, primary_date, artist_maker, origin } = req.body;
+
+    const cloudinaryUrl = req.body.cloudinaryUrl;
+
     const item = await Item.create({
       object_type,
       primary_date,
       artist_maker,
       origin,
+      cloudinaryUrl,
     });
 
     const collectionID = req.body.collection_ID;

@@ -3,7 +3,7 @@ const User = require("../schemas/User");
 
 //get all
 const getAllCollections = async (req, res) => {
-  const userId = req.user._id;
+  const userId = req.user?._id;
 
   try {
     const user = await User.findById(userId).populate({
